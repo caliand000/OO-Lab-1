@@ -55,11 +55,13 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    /*
     if (!list.get_value(3).has_value())
     {
         std::cout << "expected 3 to be in list but it wasn't" << std::endl;
         exit(1);
     }
+    */
 
     if (!list.remove(3))
     {

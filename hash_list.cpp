@@ -1,6 +1,8 @@
 #include "hash_list.h"
 
-hash_list::hash_list() {}
+hash_list::hash_list() {
+    size = 0;
+}
 
 /**-----------------------------------------------------------------------------------
  * START Part 1
@@ -20,7 +22,8 @@ void hash_list::insert(int key, float value) {
    } 
    else // check for duplicate, if not then add a new node
    {
-    while (head -> next != NULL)
+    curr = head;
+    while (curr -> next != NULL)
     {
         curr = curr -> next; 
         if(curr -> key == key)  //check duplicate
@@ -31,6 +34,7 @@ void hash_list::insert(int key, float value) {
     insert-> value = value;
     insert-> next = NULL;
     curr->next = insert;
+    size += 1;
    }
 }
 // Check for duplicates, reset head and tail pointers after insertion
@@ -38,7 +42,27 @@ void hash_list::insert(int key, float value) {
 
 std::optional<float> hash_list::get_value(int key) const { return std::nullopt; }
 
-bool hash_list::remove(int key) { return false; }
+bool hash_list::remove(int key) { 
+    curr = head;
+    node* prev = curr;
+    node* temp;
+    while(curr->next != NULL && curr->key != key){
+        prev = curr;
+        curr = curr->next;
+    }
+    if(curr->key != key)
+        return false; // key doesn't exist in linked list
+    else{
+        temp = curr;
+        if(prev == curr)
+            head = curr->next;
+        else
+            prev->next = curr->next;
+    }
+    size -= 1;
+    delete temp;
+    return false; 
+    }
 
 size_t hash_list::get_size() const { 
     return size; 

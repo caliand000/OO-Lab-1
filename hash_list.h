@@ -25,10 +25,6 @@ struct node
 class hash_list
 {
 
-int size = 0;
-node* head;
-node* curr;
-
 public:
 
     /**
@@ -164,7 +160,8 @@ private:
     node *head;
 
     /** The node that the iterator is currently pointing to */
-    node *iter_ptr;
+    node *curr;
+    //iter_ptr
 };
 
 #endif

@@ -25,6 +25,10 @@ struct node
 class hash_list
 {
 
+int size = 0;
+node* head;
+node* curr;
+
 public:
 
     /**

@@ -18,7 +18,7 @@ void hash_list::insert(int key, float value) {
     size += 1;
     curr = head;
    } 
-   else // add a new node
+   else // check for duplicate, if not then add a new node
    {
     while (head -> next != NULL)
     {
@@ -26,8 +26,11 @@ void hash_list::insert(int key, float value) {
         if(curr -> key == key)  //check duplicate
             curr -> value = value;
     }
-    // check duplicate
-
+    node* insert = new node();
+    insert-> key = key;
+    insert-> value = value;
+    insert-> next = NULL;
+    curr->next = insert;
    }
 }
 // Check for duplicates, reset head and tail pointers after insertion
@@ -37,7 +40,9 @@ std::optional<float> hash_list::get_value(int key) const { return std::nullopt; 
 
 bool hash_list::remove(int key) { return false; }
 
-size_t hash_list::get_size() const { return 0; }
+size_t hash_list::get_size() const { 
+    return size; 
+}
 
 hash_list::~hash_list() {}
 

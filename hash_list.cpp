@@ -72,10 +72,10 @@ bool hash_list::remove(int key) {
             head = curr->next;
         else
             prev->next = curr->next;
+        size -= 1;
+        delete temp;
+        return true; 
     }
-    size -= 1;
-    delete temp;
-    return true; 
 }
 
 size_t hash_list::get_size() const { 

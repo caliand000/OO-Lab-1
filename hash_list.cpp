@@ -1,6 +1,7 @@
 #include "hash_list.h"
 
 hash_list::hash_list() {
+    head = nullptr;
     size = 0;
 }
 
@@ -11,7 +12,7 @@ hash_list::hash_list() {
 void hash_list::insert(int key, float value) {
 
     node* curr;
-    if (!size)   // assign the head
+    if (size == 0)   // assign the head
    {
     node* insert = new node();
     head = insert;

@@ -10,6 +10,16 @@ int trace_1()
     hash_list list;
     std::cout << "Inserting key=1, value=1\n";
     list.insert(1, 1);
+    if (list.get_size() != 1)
+    {
+        std::cout << "size not equal to 1\n";
+        return 1;
+    }
+    else
+    {
+        std::cout << "size equal to 1\n";
+        
+    }
     std::cout << "Inserting key=2, value=2\n";
     list.insert(2, 2);
     std::cout << "Inserting key=3, value=3\n";

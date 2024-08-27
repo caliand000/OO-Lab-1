@@ -26,13 +26,13 @@ void hash_list::insert(int key, float value) {
    {
     curr = head;
     while (curr -> next != NULL)
-    {
-        curr = curr -> next; 
+    { 
         if(curr -> key == key)  //check duplicate
         {
             curr -> value = value;
             return;
         }
+        curr = curr->next;
     }
     node* insert = new node();
     insert-> key = key;
@@ -85,9 +85,21 @@ size_t hash_list::get_size() const {
     return size; 
 }
 
-hash_list::~hash_list() {}
+hash_list::~hash_list() {
+    node* curr = head;
+    node* temp;
 
-/**-----------------------------------------------------------------------------------
+     while (curr->next != NULL)
+    {
+        temp = curr;
+        curr = curr->next;
+        delete temp;
+    }
+    delete curr;
+}
+
+/**----------------------------
+ * -------------------------------------------------------
  * END Part 1
  *------------------------------------------------------------------------------------*/
 

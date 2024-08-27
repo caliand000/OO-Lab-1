@@ -34,6 +34,11 @@ void hash_list::insert(int key, float value) {
         }
         curr = curr->next;
     }
+    if(curr -> key == key)  //check duplicate
+        {
+            curr -> value = value;
+            return;
+        }
     node* insert = new node();
     insert-> key = key;
     insert-> value = value;

@@ -37,7 +37,15 @@ int main(int argc, char *argv[])
 
 #ifdef PART1
     hash_list list;
-    trace_1();
+    
+    list.insert(1,1);
+    list.insert(1,1);
+    std::cout << list.get_size() << std::endl;
+    return 0;
+
+
+
+    //trace_1();
     if (list.get_size() != 0)
     {
         std::cout << "Invalid size" << std::endl;

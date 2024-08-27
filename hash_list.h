@@ -160,7 +160,7 @@ private:
     node *head;
 
     /** The node that the iterator is currently pointing to */
-    node *curr;
+    node *iter_ptr;
     //iter_ptr
 };
 

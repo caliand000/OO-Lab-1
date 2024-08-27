@@ -54,18 +54,22 @@ int main(int argc, char *argv[])
         std::cout << "Invalid size" << std::endl;
         exit(1);
     }
-
-    /*
+    
     if (!list.get_value(3).has_value())
     {
         std::cout << "expected 3 to be in list but it wasn't" << std::endl;
         exit(1);
     }
-    */
-
+    
     if (!list.remove(3))
     {
         std::cout << "Failed to remove 3 from list" << std::endl;
+        exit(1);
+    }
+
+    if(!list.remove(5))
+    {
+        std::cout << "Failed to remove 5 from list" << std::endl;
         exit(1);
     }
 

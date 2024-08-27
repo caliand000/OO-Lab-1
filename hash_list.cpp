@@ -64,8 +64,7 @@ std::optional<float> hash_list::get_value(int key) const {
 }
 
 bool hash_list::remove(int key) { 
-    node* curr;
-    curr = head;
+    node* curr = head;
     node* prev = curr;
     node* temp;
     while(curr->next != NULL && curr->key != key){
@@ -76,10 +75,17 @@ bool hash_list::remove(int key) {
         return false; // key doesn't exist in linked list
     else{
         temp = curr;
-        if(prev == curr)
+        if(prev == curr && curr->next != NULL)
             head = curr->next;
+        else if(prev == curr && curr->next == NULL)
+            head = NULL;
         else
-            prev->next = curr->next;
+        {
+            if(curr->next == NULL)
+                prev->next = NULL;
+            else
+                prev->next = curr->next;
+        }
         size -= 1;
         delete temp;
         return true; 

@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
 
 
-    //trace_1();
+    trace_1();
     if (list.get_size() != 0)
     {
         std::cout << "Invalid size" << std::endl;

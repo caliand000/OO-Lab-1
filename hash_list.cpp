@@ -52,6 +52,10 @@ void hash_list::insert(int key, float value) {
 
 std::optional<float> hash_list::get_value(int key) const { 
     node* curr = head;
+
+    if(curr == NULL)
+        return std::nullopt; 
+
     while(curr->next != NULL && curr->key != key){
         curr = curr->next;
     }

@@ -38,10 +38,10 @@ int main(int argc, char *argv[])
 #ifdef PART1
     hash_list list;
 
-    list.insert(1,1);
-    list.insert(2,2);
+    list.get_value(1);
+    list.get_value(2);
     list.remove(1);
-    list.remove(2);
+    list.insert(1,1);
     return 0;
 
     

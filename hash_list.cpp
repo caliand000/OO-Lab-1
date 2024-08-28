@@ -100,6 +100,9 @@ hash_list::~hash_list() {
     node* curr = head;
     node* temp;
 
+    if(head == NULL)
+        return;
+
      while (curr->next != NULL)
     {
         temp = curr;

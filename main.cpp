@@ -37,15 +37,14 @@ int main(int argc, char *argv[])
 
 #ifdef PART1
     hash_list list;
-    
+
     list.insert(1,1);
-    list.insert(1,1);
-    std::cout << list.get_size() << std::endl;
+    list.insert(2,2);
+    list.remove(1);
+    list.remove(2);
     return 0;
 
-
-
-    trace_1();
+    
     if (list.get_size() != 0)
     {
         std::cout << "Invalid size" << std::endl;
@@ -86,6 +85,31 @@ int main(int argc, char *argv[])
         std::cout << "Unexpected 3 in list" << std::endl;
         exit(1);
     }
+
+    list.insert(3, 3);
+    list.insert(4, 4);
+    list.insert(5, 5);
+    list.insert(6, 6);
+
+    list.insert(3, 3);
+    list.insert(4, 4);
+    list.insert(5, 5);
+    list.insert(6, 6);
+
+    list.insert(1, 2);
+    list.insert(2, 1);
+    list.insert(3, 4);
+    list.insert(5, 1);
+
+    list.remove(4);
+    list.remove(2);
+    list.remove(3);
+
+    list.get_value(4);
+    list.get_value(3);
+    list.get_value(6);
+
+
 #endif
 
 #ifdef PART2

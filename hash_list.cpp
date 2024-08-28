@@ -67,6 +67,10 @@ bool hash_list::remove(int key) {
     node* curr = head;
     node* prev = curr;
     node* temp;
+
+    if(head == NULL)
+        return false;
+
     while(curr->next != NULL && curr->key != key){
         prev = curr;
         curr = curr->next;

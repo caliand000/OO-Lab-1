@@ -34,7 +34,7 @@ void hash_list::insert(int key, float value) {
         }
         curr = curr->next;
     }
-    if(curr -> key == key)  //check duplicate
+    if(curr -> key == key)  //check duplicate at the end of the list
         {
             curr -> value = value;
             return;
@@ -42,7 +42,7 @@ void hash_list::insert(int key, float value) {
     node* insert = new node();
     insert-> key = key;
     insert-> value = value;
-    insert-> next = NULL;
+    insert-> next = NULL;   // inserting at the end of the list
     curr->next = insert;
     size += 1;
    }
@@ -53,15 +53,18 @@ void hash_list::insert(int key, float value) {
 std::optional<float> hash_list::get_value(int key) const { 
     node* curr = head;
 
+    // case where there are no values
     if(curr == NULL)
         return std::nullopt; 
-
+    // travel through the list, stop when the key is found, or if at the end of the list
     while(curr->next != NULL && curr->key != key){
         curr = curr->next;
     }
+    // if the key has been found, return the value
     if(curr->key == key){
         return curr->value;
     }
+    // else, return no
     else{
         return std::nullopt; 
     }
@@ -83,16 +86,16 @@ bool hash_list::remove(int key) {
         return false; // key doesn't exist in linked list
     else{
         temp = curr;
-        if(prev == curr && curr->next != NULL)
+        if(prev == curr && curr->next != NULL)  // removal of head but there is another node in the list
             head = curr->next;
-        else if(prev == curr && curr->next == NULL)
+        else if(prev == curr && curr->next == NULL) // removal of head and it was the last node in the list
             head = NULL;
-        else
+        else    
         {
-            if(curr->next == NULL)
+            if(curr->next == NULL)  // removal of tail
                 prev->next = NULL;
             else
-                prev->next = curr->next;
+                prev->next = curr->next;    // removal of node in the middle of list
         }
         size -= 1;
         delete temp;
@@ -130,20 +133,83 @@ hash_list::~hash_list() {
  * START Part 2
  *------------------------------------------------------------------------------------*/
 
-hash_list::hash_list(const hash_list &other) {}
+// copy constructor
+hash_list::hash_list(const hash_list &other) {
+    // check to make sure other list has nodes. If no nodes, make an empty list.
+    if (other.head == NULL)
+    {
+        head = NULL;
+        size = 0;
+    }
+    else {
+        // create and assign the new head
+        head = new node;
+        head->key = other.head->key;
+        head->value = other.head->value;
+        head->next = NULL;
+        size = 1;
 
-hash_list &hash_list::operator=(const hash_list &other) { return *this; }
+        // setup traveling pointers
+        node * ogList = other.head -> next;
+        node * newList = head;
+        // travel through the original list copying nodes
+        while (ogList != NULL)  // when ogList is null, the end of the list has been reached
+        {
+            node* insert = new node;
+            insert->key = ogList->key;
+            insert->value = ogList->value;
+            insert->next = NULL;    // assign NULL for now in case that was the last node.
+            newList->next = insert;
 
-void hash_list::reset_iter() {}
+            newList = newList->next;
+            ogList = ogList->next;
+            size += 1;
+        }
+    }
+}
 
+// assignment operator
+hash_list &hash_list::operator=(const hash_list &other) {
+    if (this != &other) // swapping 'other' hash_list to current hash_list
+    {
+        hash_list temp = other;
+        std::swap(head, temp.head);
+        std::swap(size, temp.size);
+    }
+    // if this == &other, then no swapping needs to be done
+    return * this;
+}
 
-void hash_list::increment_iter() {}
+//DONE
+void hash_list::reset_iter() {
+    iter_ptr = head;    // reset to first element
+}
 
+//DONE
+void hash_list::increment_iter() {
+    if (iter_ptr == NULL)   // catch the case where iter_ptr is already null
+        return;
+    iter_ptr = iter_ptr -> next;    // this will go to NULL after the last element
+}
 
-std::optional<std::pair<const int *, float *>> hash_list::get_iter_value() { return std::nullopt; }
+// Done
+std::optional<std::pair<const int *, float *>> hash_list::get_iter_value() {
+    // obtain iter_ptr node key/value address
+    const int * keyPtr = &(iter_ptr->key);
+    float * valPtr = &(iter_ptr->value);
+    if (iter_ptr == NULL)   // iter_value is not at a node
+        return std::nullopt;
+    else
+        return std::pair(keyPtr, valPtr);   // return the pointers to the key/value address
+}
 
-
-bool hash_list::iter_at_end() { return false; }
+//DONE
+bool hash_list::iter_at_end() { 
+    if (iter_ptr == NULL)    
+        return true;
+    else
+        return false;
+}
 /**-----------------------------------------------------------------------------------
  * END Part 2
  *------------------------------------------------------------------------------------*/

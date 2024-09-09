@@ -13,7 +13,7 @@ struct node
 {
     /** The key the node is storing */
     int key;
-
+ 
     /** the value the node is storing */
     float value;
 

@@ -34,7 +34,7 @@ void hash_map::insert(int key, float value) {
     int mapInt = key % _capacity;
     if (mapInt < 0)
         mapInt *= -1;
-    int prevSize = _head[mapInt].get_size();
+    size_t prevSize = _head[mapInt].get_size();
     //insert at the hashed key
     _head[mapInt].insert(key, value);
     if (prevSize != _head[mapInt].get_size())

@@ -10,23 +10,37 @@
 //Testing git push abilities
 
 /** A single key/value pair in the linked list */
-struct node
-{
-    /** The key the node is storing */
-    int key;
+// template<typename K, typename V>
+// struct node
+// {
+//     /** The key the node is storing */
+//     K key;
  
-    /** the value the node is storing */
-    float value;
+//     /** the value the node is storing */
+//     V value;
 
-    /** a pointer to the next node */
-    node *next;
-};
+//     /** a pointer to the next node */
+//     node<K,V> *next;
+// };
 
 /** A list that stores key/value pairs */
+template<typename K, typename V>
 class hash_list
 {
 
 public:
+
+    struct node
+    {
+        /** The key the node is storing */
+        K key;
+    
+        /** the value the node is storing */
+        V value;
+
+        /** a pointer to the next node */
+        node *next;
+    };
 
     /**
      * @brief Create an empty list
@@ -47,7 +61,7 @@ public:
      * @param value
      *  The value to insert into the list
      */
-    void insert(int key, float value);
+    void insert(K key, V value);
 
     /**
      * @brief Return an optional containing the value associated with the specified key. If the key
@@ -59,7 +73,7 @@ public:
      *  If the key isn't in the list returns an empty optional
      *  If the key is in the list returns the corresponding value
      */
-    std::optional<float> get_value(int key) const;
+    std::optional<float> get_value(K key) const;
 
     /**
      * @brief Remove the node containing the specified key from the list and return true.
@@ -71,7 +85,7 @@ public:
      *  True if the key was removed from the list
      *  False if the key wasn't in the list
      */
-    bool remove(int key);
+    bool remove(K key);
 
     /**
      * @brief Return the number of nodes in the list. 
@@ -103,7 +117,7 @@ public:
      * @param other
      *  The list to create a copy of
      */
-    hash_list(const hash_list &other);
+    hash_list(const hash_list<K, V> &other);
 
     /**
      * @brief Assignment operator
@@ -164,5 +178,7 @@ private:
     node *iter_ptr;
     //iter_ptr
 };
+
+#include "hash_list.hpp"
 
 #endif

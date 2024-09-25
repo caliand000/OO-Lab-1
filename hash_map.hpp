@@ -43,6 +43,35 @@ hash_map<K, V> &hash_map<K, V>::operator=(const hash_map<K, V> &other) {
 }
 
 
+template<typename K, typename V>
+void hash_map<K, V>::rehash(size_t capacity){
+
+    size_t newcapacity;
+    //need to iterate through values in capacities to see which one will work
+    for (size_t i = 0; i < sizeof(_capacities); i++){
+        if(_size > _upper_load_factor * _capacity)
+            newcapacity = (_capacities[i] > capacity)? _capacities[i] : capacity;
+        
+        else if(_size < _lower_load_factor * _capacity)
+            newcapacity = (_capacities[i] < capacity)? _capacities[i] : capacity;
+    }
+
+    hash_list<K, V>* travel = _head;             // variable to hold previous map
+
+    _head = new hash_list<K, V>[newcapacity];    // head becomes the pointer to a new array of hash_lists
+
+    K *keys = new K[_size];                      // array to hold all keys
+    get_all_keys(keys);
+
+    for(size_t i = 0; i < sizeof(keys); i++){
+        insert(keys[i], travel->get_value(keys[i]).value());
+    }                                            // reinsert all keys into new map
+
+    delete[] keys;                               // free keys
+    delete[] travel;                             // free old map
+}
+
+
 // insert key and value into hash_map
 template<typename K, typename V>
 void hash_map<K, V>::insert(K key, V value) {
@@ -55,6 +84,14 @@ void hash_map<K, V>::insert(K key, V value) {
     _head[index].insert(key, value);
     if (prevSize != _head[index].get_size())
         _size += 1;
+
+
+
+    // check if the load factor is too high
+    if(_size > _upper_load_factor * _capacity)
+
+    // check if the load factor is too low
+    else if(_size < _lower_load_factor * _capacity)
 }
 
 // get value from hash_map
@@ -93,6 +130,13 @@ bool hash_map<K, V>::remove (K key) {
     }    
     else
         return false;
+
+    // check if the load factor is too high
+    if(_size > _upper_load_factor * _capacity)
+        //rehash with capacities[+ 1] if its not the max
+    // check if the load factor is too low
+    else if(_size < _lower_load_factor * _capacity)
+        //rehash with capacities[- 1] if its not the min
 }
 
 template<typename K, typename V>
@@ -111,7 +155,7 @@ template<typename K, typename V>
 void hash_map<K, V>::get_all_keys(K *keys) {
     if (_capacity == 0)
         return;
-    std::optional<std::pair<const int *, float *>> keyAndVal;
+    std::optional<std::pair<const K *, V *>> keyAndVal;
     hash_list<K, V> travel;   // variable to go through hash_map
     int keyIndex = 0;   // index of array with all keys
     for (size_t i = 0; i < _capacity; i++)

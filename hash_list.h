@@ -7,22 +7,6 @@
 #include <utility>
 
 
-//Testing git push abilities
-
-/** A single key/value pair in the linked list */
-// template<typename K, typename V>
-// struct node
-// {
-//     /** The key the node is storing */
-//     K key;
- 
-//     /** the value the node is storing */
-//     V value;
-
-//     /** a pointer to the next node */
-//     node<K,V> *next;
-// };
-
 /** A list that stores key/value pairs */
 template<typename K, typename V>
 class hash_list

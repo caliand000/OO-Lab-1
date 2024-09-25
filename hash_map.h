@@ -36,6 +36,14 @@ public:
      */
     hash_map<K, V> &operator=(const hash_map<K, V> &other);
 
+
+    /**
+     * @brief rehash function if ratio of elements in map to number of buckets is 
+     * above a certain threshold
+     */
+    void rehash(size_t capacity);
+
+
     /**
      * @brief Insert the key/value pair into the map. If the specified key already exists
      * in the map update the associated value, otherwise insert a new key value pair

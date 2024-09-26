@@ -57,7 +57,7 @@ void hash_list<K, V>::insert(K key, V value) {
 
 // get value from hash_map
 template<typename K, typename V>
-std::optional<float> hash_list<K, V>::get_value(K key) const { 
+std::optional<V> hash_list<K, V>::get_value(K key) const { 
     node* curr = head;
 
     // case where there are no values
@@ -203,10 +203,10 @@ void hash_list<K, V>::increment_iter() {
 
 
 template<typename K, typename V>
-std::optional<std::pair<const int *, float *>> hash_list<K, V>::get_iter_value() {
+std::optional<std::pair<const K *, V *>> hash_list<K, V>::get_iter_value() {
     // obtain iter_ptr node key/value address
-    const int * keyPtr = &(iter_ptr->key);
-    float * valPtr = &(iter_ptr->value);
+    const K * keyPtr = &(iter_ptr->key);
+    V * valPtr = &(iter_ptr->value);
     if (iter_ptr == NULL)   // iter_value is not at a node
         return std::nullopt;
     else

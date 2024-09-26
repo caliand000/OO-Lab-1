@@ -4,6 +4,7 @@
 #include <optional>
 #include <stddef.h>
 #include <stdlib.h>
+#include <algorithm>
 
 
 // Definition of templated functions
@@ -19,9 +20,16 @@ hash_map<K,V>::hash_map(size_t capacity, float upper_load_factor, float lower_lo
 // copy constructor
 template<typename K, typename V>
 hash_map<K, V>::hash_map(const hash_map<K, V> &other) {
+
+    if(other._head == NULL){
+        _head == NULL;
+        return;
+    }
     _capacity = other._capacity;
     _head = new hash_list<K,V>[other._capacity];
     _size = other._size;
+    _upper_load_factor = other._upper_load_factor;
+    _lower_load_factor = other._lower_load_factor;
 
     for (size_t i = 0; i < _capacity; i++)
     {
@@ -38,37 +46,51 @@ hash_map<K, V> &hash_map<K, V>::operator=(const hash_map<K, V> &other) {
         std::swap(_size, temp._size);
         std::swap(_capacity, temp._capacity);
         std::swap(_head, temp._head);
+        std::swap(_upper_load_factor, temp._upper_load_factor);
+        std::swap(_lower_load_factor, temp._lower_load_factor);
     }
     return * this;
 }
 
 
 template<typename K, typename V>
-void hash_map<K, V>::rehash(size_t capacity){
+void hash_map<K, V>::rehash(){
 
-    size_t newcapacity;
-    //need to iterate through values in capacities to see which one will work
-    for (size_t i = 0; i < sizeof(_capacities); i++){
-        if(_size > _upper_load_factor * _capacity)
-            newcapacity = (_capacities[i] > capacity)? _capacities[i] : capacity;
-        
-        else if(_size < _lower_load_factor * _capacity)
-            newcapacity = (_capacities[i] < capacity)? _capacities[i] : capacity;
+    size_t newcapacity = _capacity;
+
+    if(_size > (_upper_load_factor * newcapacity)) {
+        for (size_t i = 0; i < 3; i++){
+            newcapacity = (_capacities[i] > newcapacity)? _capacities[i] : newcapacity;
+            if (newcapacity != _capacity) break;
+        }
     }
 
-    hash_list<K, V>* travel = _head;             // variable to hold previous map
+    if(_size < (_lower_load_factor * newcapacity)) {
+        for (size_t i = 0; i < 3; i++){
+            newcapacity = (_capacities[2 - i] < newcapacity)? _capacities[2 - i] : newcapacity;
+            if (newcapacity != _capacity) break;
+        }
+    }
 
-    _head = new hash_list<K, V>[newcapacity];    // head becomes the pointer to a new array of hash_lists
+    if (newcapacity == _capacity) return;
+    hash_list<K, V>* newhead = new hash_list<K, V>[newcapacity];
 
-    K *keys = new K[_size];                      // array to hold all keys
-    get_all_keys(keys);
+    for(size_t i = 0; i < _capacity; i++){
+        _head[i].reset_iter();
+        while(!(_head[i].iter_at_end())){
+            std::optional<std::pair<const K *, V *>> keyAndVal = _head[i].get_iter_value();
+            if(keyAndVal.has_value()){
+                size_t index = _hash(*keyAndVal.value().first) % newcapacity;
+                newhead[index].insert(*keyAndVal.value().first, *keyAndVal.value().second);
+            }
+             _head[i].increment_iter();  
+        }
+    }
 
-    for(size_t i = 0; i < sizeof(keys); i++){
-        insert(keys[i], travel->get_value(keys[i]).value());
-    }                                            // reinsert all keys into new map
-
-    delete[] keys;                               // free keys
-    delete[] travel;                             // free old map
+    _capacity = newcapacity;
+                                      
+    delete[] _head;      
+    _head = newhead;                                                    
 }
 
 
@@ -84,26 +106,19 @@ void hash_map<K, V>::insert(K key, V value) {
     _head[index].insert(key, value);
     if (prevSize != _head[index].get_size())
         _size += 1;
-
-
-
-    // check if the load factor is too high
-    if(_size > _upper_load_factor * _capacity)
-
-    // check if the load factor is too low
-    else if(_size < _lower_load_factor * _capacity)
+    rehash();
 }
 
 // get value from hash_map
 template<typename K, typename V>
 std::optional<float> hash_map<K, V>::get_value(K key) const {
     // go to hashed key
-    int index = key % _capacity;
+    size_t index = _hash(key) % _capacity;
     if (index < 0)
         index *= -1;
     hash_list<K, V> travel = _head[index];   // variable to go through hash_list
     travel.reset_iter();                // make sure iterator is at head
-    std::optional<std::pair<const int *, float *>> keyAndVal;   // set up iterator to go through hash_list
+    std::optional<std::pair<const K *, V *>> keyAndVal;   // set up iterator to go through hash_list
     while (!(travel.iter_at_end())) // travel to the end
     {
         keyAndVal = travel.get_iter_value();    // update key and value to latest node
@@ -116,27 +131,20 @@ std::optional<float> hash_map<K, V>::get_value(K key) const {
 }
 
 
-
-// remove key from hash_map
+// remove bucket from hash_map
 template<typename K, typename V>
 bool hash_map<K, V>::remove (K key) {
-    int index = key % (int)_capacity;
+    int index = _hash(key) % _capacity;
     if (index < 0)
         index *= -1;
     if (_head[index].remove(key))
     {
         _size -= 1;
+        rehash();
         return true;
     }    
     else
         return false;
-
-    // check if the load factor is too high
-    if(_size > _upper_load_factor * _capacity)
-        //rehash with capacities[+ 1] if its not the max
-    // check if the load factor is too low
-    else if(_size < _lower_load_factor * _capacity)
-        //rehash with capacities[- 1] if its not the min
 }
 
 template<typename K, typename V>
@@ -173,6 +181,12 @@ void hash_map<K, V>::get_all_keys(K *keys) {
 }
 
 template<typename K, typename V>
+void hash_map<K, V>::get_all_sorted_keys(K *keys){
+    get_all_keys(keys);
+    std::sort(keys, keys + _size);
+}
+
+template<typename K, typename V>
 void hash_map<K, V>::get_bucket_sizes(size_t *buckets) {
     if (_capacity == 0)
     {
@@ -189,7 +203,7 @@ void hash_map<K, V>::get_bucket_sizes(size_t *buckets) {
 
 template<typename K, typename V>
 hash_map<K, V>::~hash_map() {
-    // iterate through the hash_list array freeing all the hash_lists
+    // iterate through the hash_list array freeing all the nodes
     delete[] _head; // free head
 }
 

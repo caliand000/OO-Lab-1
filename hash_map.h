@@ -41,7 +41,7 @@ public:
      * @brief rehash function if ratio of elements in map to number of buckets is 
      * above a certain threshold
      */
-    void rehash(size_t capacity);
+    void rehash();
 
 
     /**
@@ -100,6 +100,18 @@ public:
      *  in the hash_map.
      */
     void get_all_keys(K *keys);
+
+    /**
+     * @brief Copies all the keys from the hash_map into the specified array
+     * and sorts the array by key value. The smallest key value should be at the
+     * front of the array, and the largest key value should be at the end of the
+     * array
+     *
+     * @param keys
+     *  A pointer to an array that has enough space to store all the keys
+     *  in the hash_map.
+     */
+    void get_all_sorted_keys(K *keys);
 
     /**
      * @brief Get the number of elements in each hash_list pointed to by _head.

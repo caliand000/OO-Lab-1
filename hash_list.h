@@ -57,7 +57,7 @@ public:
      *  If the key isn't in the list returns an empty optional
      *  If the key is in the list returns the corresponding value
      */
-    std::optional<float> get_value(K key) const;
+    std::optional<V> get_value(K key) const;
 
     /**
      * @brief Remove the node containing the specified key from the list and return true.
@@ -136,7 +136,7 @@ public:
      *  If the iterator is NULL returns an empty optional
      *  Otherwise returns a pointer to the key/value pointed to by the current iterator
      */
-    std::optional<std::pair<const int *, float *>> get_iter_value();
+    std::optional<std::pair<const K *, V *>> get_iter_value();
 
     /**
      * @brief Returns true if the iterator is NULL
